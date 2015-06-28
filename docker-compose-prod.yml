@@ -1,0 +1,4 @@
+app:
+  extends:
+    file: docker-compose-common.yml
+    service: app
