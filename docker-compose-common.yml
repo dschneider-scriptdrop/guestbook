@@ -1,4 +1,11 @@
 app:
   build: app
+  restart: always
   ports:
     - "8000:8000"
+
+web:
+  build: web
+  restart: always
+  ports:
+    - "80:80"

@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Hello Docker 3!'
+    return 'Hello Docker + Nginx + Gunicorn + Flask!'
 
 
 if __name__ == "__main__":
