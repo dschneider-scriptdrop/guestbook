@@ -1,4 +1,6 @@
-FROM python:3.4.3
+FROM python:3.4
+
+ENV PYTHONUNBUFFERED 1
 
 ADD . /src
 
