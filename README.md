@@ -13,14 +13,13 @@
 ```
 docker-machine create --driver virtualbox guestbook-dev
 eval "$(docker-machine env guestbook-dev)"
-docker-compose -f docker-compose-dev.yml up -d
+docker-compose --file docker-compose-dev.yml up -d
 ```
 
 ## Initialize the Database
 
 ```
-docker-compose -f docker-compose-dev.yml run --rm --no-deps app python app.py create_db
-docker-compose -f docker-compose-dev.yml run --rm --no-deps app python app.py create_dummy_data
+docker-compose --file docker-compose-dev.yml run --remove --no-deps app python app.py create_db
 ```
 
 # Remote
@@ -28,37 +27,37 @@ docker-compose -f docker-compose-dev.yml run --rm --no-deps app python app.py cr
 ## Initialize the Environment
 
 ```
-docker-machine create --driver rackspace guestbook-prod
-eval "$(docker-machine env guestbook-prod)"
-docker-compose -f docker-compose-prod.yml build
-docker-compose -f docker-compose-prod.yml up -d
+docker-machine create --driver rackspace guestbook
+eval "$(docker-machine env guestbook)"
+docker-compose build
+docker-compose up -d
 ```
 
 ## Security
 
 ```
-docker-machine ssh guestbook-prod "apt-get update"
-docker-machine ssh guestbook-prod "ufw default deny"
-docker-machine ssh guestbook-prod "ufw allow ssh"
-docker-machine ssh guestbook-prod "ufw allow http"
-docker-machine ssh guestbook-prod "ufw allow https"
-docker-machine ssh guestbook-prod "ufw allow 2376"
-docker-machine ssh guestbook-prod "ufw --force enable"
-docker-machine ssh guestbook-prod "apt-get -y install fail2ban"
+docker-machine ssh guestbook "apt-get update"
+docker-machine ssh guestbook "ufw default deny"
+docker-machine ssh guestbook "ufw allow ssh"
+docker-machine ssh guestbook "ufw allow http"
+docker-machine ssh guestbook "ufw allow https"
+docker-machine ssh guestbook "ufw allow 2376"
+docker-machine ssh guestbook "ufw --force enable"
+docker-machine ssh guestbook "apt-get -y install fail2ban"
 ```
 
 ## Initialize the Database
 
 ```
-docker-compose -f docker-compose-prod.yml run --rm --no-deps app python app.py create_db
-docker-compose -f docker-compose-prod.yml run --rm --no-deps app python app.py create_dummy_data
+docker-compose run --rm --no-deps app python app.py create_db
+docker-compose run --rm --no-deps app python app.py create_dummy_data
 ```
 
 ## Deploy Changes to Remote
 
 ```
-docker-compose -f docker-compose-prod.yml build
-docker-compose -f docker-compose-prod.yml up -d --x-smart-recreate
+docker-compose build
+docker-compose up -d --x-smart-recreate
 ```
 
 ## Work with the Database
