@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Docker Guestbook</h1>
-    <h2>Sign the Guestbook! 1</h2>
+    <h2>Sign the Guestbook!</h2>
     <form method="POST" action="">
         <label for="name">Name:</label>
         <input id="name" name="name" type="text" autofocus/>
@@ -16,7 +16,7 @@
     <h2>Previous Guests:</h2>
     <ol>
         {% for guest in guests %}
-        <li>{{ guest }}</li>
+        <li>{{ guest.name }}</li>
         {% endfor %}
     </ol>
 </body>
