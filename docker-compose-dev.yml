@@ -8,7 +8,7 @@ db:
     file: docker-compose-common.yml
     service: db
   ports:
-    # Publish the port so it's visible on the host
+    # Publish the port so it's visible on the host, you can access the db directly
     - "3306:3306"
   environment:
     # Environment variables to configure MySQL on startup.
@@ -27,7 +27,7 @@ app:
     file: docker-compose-common.yml
     service: app
   ports:
-    # Publish the port so it's visible on the host
+    # Publish the port so it's visible on the host, you can access the app directly
     - "8000:8000"
   links:
     # Link to the db service to store state

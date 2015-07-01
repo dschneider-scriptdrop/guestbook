@@ -19,7 +19,7 @@ docker-compose --file docker-compose-dev.yml up -d
 ## Initialize the Database
 
 ```
-docker-compose --file docker-compose-dev.yml run --remove --no-deps app python app.py create_db
+docker-compose --file docker-compose-dev.yml run --rm --no-deps app python app.py create_db
 ```
 
 # Remote
@@ -31,26 +31,24 @@ docker-machine create --driver rackspace guestbook
 eval "$(docker-machine env guestbook)"
 docker-compose build
 docker-compose up -d
-```
-
-## Security
-
-```
-docker-machine ssh guestbook "apt-get update"
-docker-machine ssh guestbook "ufw default deny"
-docker-machine ssh guestbook "ufw allow ssh"
-docker-machine ssh guestbook "ufw allow http"
-docker-machine ssh guestbook "ufw allow https"
-docker-machine ssh guestbook "ufw allow 2376"
-docker-machine ssh guestbook "ufw --force enable"
-docker-machine ssh guestbook "apt-get -y install fail2ban"
-```
 
 ## Initialize the Database
 
 ```
 docker-compose run --rm --no-deps app python app.py create_db
-docker-compose run --rm --no-deps app python app.py create_dummy_data
+```
+```
+
+## Secure the Environment
+
+```
+docker-machine ssh guestbook "apt-get update"
+docker-machine ssh guestbook "apt-get -y install fail2ban"
+docker-machine ssh guestbook "ufw default deny"
+docker-machine ssh guestbook "ufw allow ssh"
+docker-machine ssh guestbook "ufw allow http"
+docker-machine ssh guestbook "ufw allow 2376" # Docker
+docker-machine ssh guestbook "ufw --force enable"
 ```
 
 ## Deploy Changes to Remote
