@@ -7,18 +7,17 @@ db:
   extends:
     file: docker-compose-common.yml
     service: db
-  expose:
-    # Expose port 3306 so it's only visibile on the container, not the host
-    - "3306"
+  ports:
+    # Publish the port so it's visible on the host, you can access the db directly
+    - "3306:3306"
   environment:
     # Environment variables to configure MySQL on startup.
-    # Environment variables with only a key are resolved to their values on
-    # the machine Compose is running on. We do this to prevent ourselves
-    # from committing sensitive data to GitHub.
-    - MYSQL_ROOT_PASSWORD
-    - MYSQL_USER
-    - MYSQL_PASSWORD
-    - MYSQL_DATABASE=guestbook
+    # We don't care about commiting these creds to GitHub because they're only
+    # for our local development environment
+    - MYSQL_ROOT_PASSWORD=my-root-password-dev
+    - MYSQL_DATABASE=guestbook-dev
+    - MYSQL_USER=guestbook-admin
+    - MYSQL_PASSWORD=my-guestbook-admin-password-dev
   volumes_from:
     # Mount the volumes from the data container to store our MySQL files
     - data
@@ -27,21 +26,27 @@ app:
   extends:
     file: docker-compose-common.yml
     service: app
-  expose:
-    # Expose port 8000 so it's only visibile on the container, not the host
-    - "8000"
+  ports:
+    # Publish the port so it's visible on the host, you can access the app directly
+    - "8000:8000"
   links:
     # Link to the db service to store state
     - db:db
-  command: gunicorn app:app --bind 0.0.0.0:8000
-    # Run Gunicorn to serve app requests
+  volumes:
+    # Mount the app dir in the container as /src so our changes to the app code
+    # are also changed in the container
+    - app:/src
+  command: gunicorn --reload app:app --bind 0.0.0.0:8000
+    # Run Gunicorn to serve app requests and reload on change so we can see our
+    # changes to the app code
+
 
 web:
   extends:
     file: docker-compose-common.yml
     service: web
   ports:
-    # Publish port 80 so it's visible on the host
+    # Publish the port so it's visible on the host
     - "80:80"
   links:
     # Link to the app to serve requests

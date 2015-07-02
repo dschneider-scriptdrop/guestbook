@@ -13,13 +13,13 @@
 ```
 docker-machine create --driver virtualbox guestbook-dev
 eval "$(docker-machine env guestbook-dev)"
-docker-compose --file docker-compose-dev.yml up -d
+docker-compose up
 ```
 
 ## Initialize the Database
 
 ```
-docker-compose --file docker-compose-dev.yml run --rm --no-deps app python app.py create_db
+docker-compose run --rm --no-deps app python app.py create_db
 ```
 
 # Remote
@@ -29,14 +29,13 @@ docker-compose --file docker-compose-dev.yml run --rm --no-deps app python app.p
 ```
 docker-machine create --driver rackspace guestbook
 eval "$(docker-machine env guestbook)"
-docker-compose build
-docker-compose up -d
+docker-compose --file docker-compose-prod.yml build
+docker-compose --file docker-compose-prod.yml up -d
 
 ## Initialize the Database
 
 ```
-docker-compose run --rm --no-deps app python app.py create_db
-```
+docker-compose --file docker-compose-prod.yml run --rm --no-deps app python app.py create_db
 ```
 
 ## Secure the Environment
@@ -54,8 +53,8 @@ docker-machine ssh guestbook "ufw --force enable"
 ## Deploy Changes to Remote
 
 ```
-docker-compose build
-docker-compose up -d --x-smart-recreate
+docker-compose --file docker-compose-prod.yml build
+docker-compose --file docker-compose-prod.yml up -d --x-smart-recreate
 ```
 
 ## Work with the Database
