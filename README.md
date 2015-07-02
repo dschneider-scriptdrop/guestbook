@@ -27,14 +27,25 @@ docker-compose run --rm --no-deps app python app.py create_db
 ## Initialize the Environment
 
 ```
+export OS_USERNAME=your-rackspace-username
+export OS_API_KEY=your-rackspace-api-key
+export OS_REGION_NAME=IAD
+```
+
+```
 docker-machine create --driver rackspace guestbook
 eval "$(docker-machine env guestbook)"
 docker-compose --file docker-compose-prod.yml build
 docker-compose --file docker-compose-prod.yml up -d
+```
 
 ## Initialize the Database
 
 ```
+export MYSQL_USER=guestbook-admin
+export MYSQL_PASSWORD=$(hexdump -v -e '1/1 "%.2x"' -n 32 /dev/random)
+export MYSQL_ROOT_PASSWORD=$(hexdump -v -e '1/1 "%.2x"' -n 32 /dev/random)
+
 docker-compose --file docker-compose-prod.yml run --rm --no-deps app python app.py create_db
 ```
 
