@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask.ext.script import Manager
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -32,13 +32,14 @@ db = SQLAlchemy(app)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    logger.debug("index")
+    logger.debug(request.method + " index")
 
     if request.method == 'POST':
         name = request.form['name']
         guest = Guest(name=name)
         db.session.add(guest)
         db.session.commit()
+        return redirect(url_for('index'))
 
     return render_template('index.html', guests=Guest.query.all())
 
