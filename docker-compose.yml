@@ -35,7 +35,7 @@ app:
   volumes:
     # Mount the app dir in the container as /src so our changes to the app code
     # are also changed in the container
-    - app:/src
+    - ./app:/src
   command: gunicorn --reload app:app --bind 0.0.0.0:8000
     # Run Gunicorn to serve app requests and reload on change so we can see our
     # changes to the app code
